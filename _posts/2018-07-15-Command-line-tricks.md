@@ -15,9 +15,9 @@ sudo vim /etc/yum.conf
 ## mount nas
 ```bash
 #mac
-mount -t smbfs //hqlabadmin:nb408a@192.168.1.121/hqlabshare /Users/vinc/hqlabshare
-mount -t smbfs //longlong:zql199318@192.168.1.121/share /Users/vinc/share
-mount -t smbfs //longlong:zql199318@192.168.1.121/longlong /Users/vinc/longlong
+mount -t smbfs //<username>:<password>@192.168.1.121/hqlabshare /Users/vinc/hqlabshare
+mount -t smbfs //<username>:<password>@192.168.1.121/share /Users/vinc/share
+mount -t smbfs //<username>:<password>@192.168.1.121/longlong /Users/vinc/longlong
 
 #linux
 sudo mount -t cifs //192.168.1.121/hqlabshare /home/hqlabadmin/hqlabshare --verbose -o user=hqlabadmin,password=nb408a
