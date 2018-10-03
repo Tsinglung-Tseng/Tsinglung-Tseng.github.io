@@ -12,6 +12,16 @@ tags: 法器集合
 sudo vim /etc/yum.conf
 ```
 
+## sed & 正则表达式
+* ^ 表示一行的开头。如：/^#/ 以#开头的匹配。
+* \$ 表示一行的结尾。如：/}$/ 以}结尾的匹配。
+* \\< 表示词首。 如：\\<abc 表示以 abc 为首的詞。
+* \\> 表示词尾。 如：abc\\> 表示以 abc 結尾的詞。
+* . 表示任何单个字符。
+* \* 表示某个字符出现了0次或多次。
+* \[ ] 字符集合。 如：[abc] 表示匹配a或b或c，还有 [a-zA-Z] 表示匹配所有的26个字符。如果其中有^表示反，如 [^a] 表示非a的字符
+
+
 ## mount nas
 ```bash
 #mac
@@ -92,6 +102,14 @@ $ sudo service sshd restart
 
 ## awk
 ![](https://ws3.sinaimg.cn/large/006tKfTcgy1fsoxjg79hxj315i0qmwjw.jpg)
+
+* awk is an excellent filter and report writer. 
+* awk 的基本结构是 pattern { action }。其中，pattern 指定何时操作被执行。
+* awk 是 line oriented -- 对全文寻找匹配 pattern 的行。对匹配成功的行执行 action。
+* 有三种特殊 pattern
+    * null 即 default pattern，匹配所有行
+    * BEGIN 和 END
+
 
 ## cat & friends
 ![](https://cl.ly/361B3P3z1W17/Image%202018-07-15%20at%202.59.57%20PM.png)

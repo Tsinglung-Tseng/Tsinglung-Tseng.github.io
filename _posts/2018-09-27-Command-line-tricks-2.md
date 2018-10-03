@@ -1,5 +1,5 @@
 ---
-title: knowledge base
+title: Command line tricks 2
 key: 20180927
 tags: 法器集合
 ---
@@ -35,3 +35,64 @@ x, y = np.meshgrid(range(canvas.shape[0]), range(canvas.shape[1]))
 mask = (x - p[0])**2 + (y - p[1])**2 <= r**2
 canvas[mask] = level
 ```
+
+### LC_ALL 
+LC_ALL=C 是为了去除所有本地化的设置，让命令能正确执行。在Linux中通过locale来设置程序运行的不同语言环境，locale由ANSI C提供支持。
+
+locale的命名规则为<语言>_<地区>.<字符集编码>，如zh_CN.UTF-8，zh代表中文，CN代表大陆地区，UTF-8表示字符集。
+
+在locale环境中，有一组变量，代表国际化环境中的不同设置：
+1.    LC_COLLATE
+定义该环境的排序和比较规则
+2.    LC_CTYPE
+用于字符分类和字符串处理，控制所有字符的处理方式，包括字符编码，字符是单字节还是多字节，如何打印等。是最重要的一个环境变量。
+3.    LC_MONETARY
+货币格式
+4.    LC_NUMERIC
+非货币的数字显示格式
+5.    LC_TIME
+时间和日期格式
+6.    LC_MESSAGES
+提示信息的语言。另外还有一个LANGUAGE参数，它与LC_MESSAGES相似，但如果该参数一旦设置，则LC_MESSAGES参数就会失效。LANGUAGE参数可同时设置多种语言信息，如LANGUANE="zh_CN.GB18030:zh_CN.GB2312:zh_CN"。
+7.    LANG
+LC_*的默认值，是最低级别的设置，如果LC_*没有设置，则使用该值。类似于 LC_ALL。
+8.    LC_ALL
+它是一个宏，如果该值设置了，则该值会覆盖所有LC_*的设置值。注意，LANG的值不受该宏影响。
+C"是系统默认的locale，"POSIX"是"C"的别名。所以当我们新安装完一个系统时，默认的locale就是C或POSIX。
+
+### set
+set - Set or unset values of shell options and positional parameters.
+
+### Working with Random Numbers in Python
+```python
+>>> import random
+>>> random.random()
+0.11981376476232541
+>>> random.random()
+0.757859420322092
+>>> random.random()
+0.7384012347073081
+```
+
+* Generating Random Ints Between x and y
+```python
+>>> import random
+>>> random.randint(1, 10)           #[x, y] 
+10
+>>> random.randrange(1, 10)         #[x, y)
+5
+>>> random.uniform(1, 10)           #  float numbers that lie within a specifc [x, y] 
+7.850184644194309
+
+>>> items = ['one', 'two', 'three', 'four', 'five']
+>>> random.shuffle(items)
+>>> items
+['four', 'one', 'five', 'three', 'two']
+
+>>> items = ['one', 'two', 'three', 'four', 'five']
+>>> random.sample(items, 3)
+['one', 'five', 'two']
+>>> random.sample(items, 3)
+['five', 'four', 'two']
+```
+
