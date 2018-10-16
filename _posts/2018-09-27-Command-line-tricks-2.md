@@ -4,6 +4,68 @@ key: 20180927
 tags: 法器集合
 ---
 
+### LC_CTYPE cannot set
+```bash
+# Insert into /etc/default/locale:
+$ sudo vim /etc/default/locale
+
+LC_CTYPE="en_US.UTF-8"
+LC_ALL="en_US.UTF-8"
+LANG="en_US.UTF-8"
+```
+
+### docker 内安装 sshd
+```Dockerfile
+FROM ubuntu:16.04
+
+RUN apt-get update && apt-get install -y openssh-server
+RUN mkdir /var/run/sshd
+RUN echo 'root:screencast' | chpasswd
+RUN sed -i 's/PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
+
+# SSH login fix. Otherwise user is kicked off after login
+RUN sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' -i /etc/pam.d/sshd
+
+ENV NOTVISIBLE "in users profile"
+RUN echo "export VISIBLE=now" >> /etc/profile
+
+EXPOSE 22
+CMD ["/usr/sbin/sshd", "-D"]
+```
+
+```bash
+$ docker run -d -P --name test_sshd eg_sshd
+$ docker port test_sshd 22
+
+0.0.0.0:49154
+
+# 此处可能还需要进入容器执行：
+$ service ssh restart
+```
+
+### [解决 Dockerfile 中 source 不生效](https://codeday.me/bug/20170702/31755.html)
+```Dockerfile
+RUN rm /bin/sh && ln -s /bin/bash /bin/sh
+```
+
+### git 
+git pull wants you to either remove or save your current work so that the merge it triggers doesn't cause conflicts with your uncommitted work. Note that you should only need to remove/save untracked files if the changes you're pulling create files in the same locations as your local uncommitted files.
+
+```bash
+# Remove your uncommitted changes
+## Tracked files
+git checkout -f
+## Untracked files
+git clean -fd
+# Save your changes for later
+## Tracked files
+git stash
+## Tracked files and untracked files
+git stash -u
+## Reapply your latest stash after git pull:
+git stash pop
+```
+
 ### 逻辑运算集合图
 
 ![](https://cl.ly/c96720801a53/download/283cc23ed0431a3aa1d371d531606748.jpg)

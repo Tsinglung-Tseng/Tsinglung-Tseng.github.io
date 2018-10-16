@@ -3,7 +3,7 @@ title: pullimages
 key: 20180616
 tags: Docker
 ---
-	
+
 ![yo](http://wx4.sinaimg.cn/mw690/0078IDjtly1fr0fopxj8hj30qz076dgl.jpg)
 
 查找需要的镜像，到[谷歌镜像库](https://console.cloud.google.com/gcr/images/google-containers/GLOBAL)。
@@ -61,4 +61,17 @@ sudo service docker restart
 http://192.168.1.133:5000/v2/_catalog
 #和某个镜像的具体版本
 http://192.168.1.133:5000/v2/srf_with_anaconda/tags/list
+```
+
+### 重新挂载 gluster
+```bash
+sudo docker run -v /etc/glusterfs:/etc/glusterfs:z \
+                -v /var/lib/glusterd:/var/lib/glusterd:z \
+                -v /var/log/glusterfs:/var/log/glusterfs:z \
+                -v /sys/fs/cgroup:/sys/fs/cgroup:ro \
+                -d —privileged=true —net=host —name=gluster-4.0.2  \
+                -v /mnt:/mnt:rshared \
+                -v /var/lib/heketi/:/var/lib/heketi \
+                -v /dev/:/dev \
+                192.168.1.133:5000/gluster-centos:v4.0.2
 ```
