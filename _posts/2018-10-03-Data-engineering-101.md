@@ -4,6 +4,72 @@ key: 20181003
 tags: Data
 ---
 
+## Concepts
+
+### ORM
+对象关系映射
+
+SQLAlchemy is a ORM, psycopg2 is a database driver. These are completely different things: SQLAlchemy generates SQL statements and psycopg2 sends SQL statements to the database. SQLAlchemy depends on psycopg2 or other database drivers to communicate with the database.
+
+### Session
+* transaction scope and session scope
+
+一个 session 同时只能处理一个 transaction, 一个 session 可以依次处理多个 transaction.
+
+为了保持本地事务与数据库的一致性。A common choice is to consider session scope (会话范围) as seperate from transcation scope.
+
+web 应用中的 request 就可以被认为是一个分离的 session 和 transcation.
+
+```python
+### this is a **better** (but not the only) way to do it ###
+
+class ThingOne(object):
+    def go(self, session):
+        session.query(FooBar).update({"x": 5})
+
+class ThingTwo(object):
+    def go(self, session):
+        session.query(Widget).update({"q": 18})
+
+def run_my_program():
+    session = Session()
+    try:
+        ThingOne().go(session)
+        ThingTwo().go(session)
+
+        session.commit()
+    except:
+        session.rollback()
+        raise
+    finally:
+        session.close()
+
+### another way (but again *not the only way*) to do it ###
+
+from contextlib import contextmanager
+
+@contextmanager
+def session_scope():
+    """Provide a transactional scope around a series of operations."""
+    session = Session()
+    try:
+        yield session
+        session.commit()
+    except:
+        session.rollback()
+        raise
+    finally:
+        session.close()
+
+
+def run_my_program():
+    with session_scope() as session:
+        ThingOne().go(session)
+        ThingTwo().go(session)
+```
+
+Session 不是 cache. 
+
 ## Postgres SQL
 Becoming a data engineer with [DATAQUEST](https://www.dataquest.io/m/245/intro-to-postgres).
 
