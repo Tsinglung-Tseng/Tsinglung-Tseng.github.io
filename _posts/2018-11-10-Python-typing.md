@@ -1,3 +1,10 @@
+---
+title: Python Typing
+key: 20181110
+tags: Python
+---
+
+
 # python typing
 
 The most fundamental support consists of the types 

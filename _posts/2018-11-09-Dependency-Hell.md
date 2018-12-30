@@ -1,3 +1,10 @@
+---
+title: Dependency Hell
+key: 20181109
+tags: Python
+---
+
+
 Dependency hell in Python often happens because pip does not have a dependency resolver and because all dependencies are shared across a project.
 
 These strategies assume that you’re using a dependency management setup similar to what we use at Knewton, which includes using pip, virtualenv, and good practices for your requirements.txt and install_requires. 

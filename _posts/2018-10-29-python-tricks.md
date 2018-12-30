@@ -1,7 +1,7 @@
 ---
 title: python tricks
 key: 20181029
-tags: Learning
+tags: Python
 ---
 
 ### Python rest-flask API
