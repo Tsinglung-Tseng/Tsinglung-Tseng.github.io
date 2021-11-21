@@ -1,12 +1,319 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="3.7.4">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" hreflang="en" /><updated>2018-09-27T09:35:39+00:00</updated><id>http://localhost:4000/</id><title type="html">longlongloveslife</title><subtitle>Everybody Fxxking Jump!
-</subtitle><author><name>Tsinglung Tseng</name><email>tsinglung.tseng@gmail.com</email></author><entry><title type="html">Welcome</title><link href="http://localhost:4000/2018/07/01/welcome.html" rel="alternate" type="text/html" title="Welcome" /><published>2018-07-01T00:00:00+00:00</published><updated>2018-07-01T00:00:00+00:00</updated><id>http://localhost:4000/2018/07/01/welcome</id><content type="html" xml:base="http://localhost:4000/2018/07/01/welcome.html">&lt;p&gt;If you see this page, that means you have setup your site. enjoy! :ghost: :ghost: :ghost:&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.1">Jekyll</generator><link href="http://0.0.0.0:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://0.0.0.0:4000/" rel="alternate" type="text/html" /><updated>2021-11-21T04:49:13-05:00</updated><id>http://0.0.0.0:4000/feed.xml</id><title type="html">Tsinglung Tseng</title><subtitle>A (nearly) no-CSS, fast, minimalist Jekyll theme.
+</subtitle><author><name>Tsinglung Tseng</name></author><entry><title type="html">Monad</title><link href="http://0.0.0.0:4000/monad.html" rel="alternate" type="text/html" title="Monad" /><published>2019-03-18T00:00:00-04:00</published><updated>2019-03-18T00:00:00-04:00</updated><id>http://0.0.0.0:4000/Monad</id><content type="html" xml:base="http://0.0.0.0:4000/monad.html">&lt;h2 id=&quot;functor&quot;&gt;Functor&lt;/h2&gt;
 
-&lt;p&gt;You may want to &lt;a href=&quot;https://tianqi.name/jekyll-TeXt-theme/docs/en/configuration&quot;&gt;config the site&lt;/a&gt; or &lt;a href=&quot;https://tianqi.name/jekyll-TeXt-theme/docs/en/writing-posts&quot;&gt;writing a post&lt;/a&gt; next. Please feel free to &lt;a href=&quot;https://github.com/kitian616/jekyll-TeXt-theme/issues&quot;&gt;create an issue&lt;/a&gt; or &lt;a href=&quot;mailto:kitian616@outlook.com&quot;&gt;send me email&lt;/a&gt; if you have any questions.&lt;/p&gt;
+&lt;p&gt;Any type that has a map function is a functor. 使用functor的好处是数据的容器被抽象掉了。比如在流中，我们无需考虑如何处理异步数据。&lt;/p&gt;
 
-&lt;!--more--&gt;
+&lt;p&gt;另外我们可以chain map calls, 因为 map function 会返回其它新的 functor。&lt;/p&gt;
 
-&lt;hr /&gt;
+&lt;h3 id=&quot;a-haskell-example&quot;&gt;A Haskell example&lt;/h3&gt;
 
-&lt;p&gt;If you like TeXt, don’t forget to give me a star. :star2:&lt;/p&gt;
+&lt;p&gt;A monad is some kind of type constructor, like maybe, or List …&lt;/p&gt;
 
-&lt;iframe src=&quot;https://ghbtns.com/github-btn.html?user=kitian616&amp;amp;repo=jekyll-TeXt-theme&amp;amp;type=star&amp;amp;count=true&quot; frameborder=&quot;0&quot; scrolling=&quot;0&quot; width=&quot;170px&quot; height=&quot;20px&quot;&gt;&lt;/iframe&gt;</content><author><name>Tsinglung Tseng</name><email>tsinglung.tseng@gmail.com</email></author><category term="TeXt" /><summary type="html">If you see this page, that means you have setup your site. enjoy! :ghost: :ghost: :ghost: You may want to config the site or writing a post next. Please feel free to create an issue or send me email if you have any questions.</summary></entry></feed>
+&lt;p&gt;The maybe monad :
+    return :: a –&amp;gt; Maybe a
+    »=    :: Maybe a –&amp;gt; (a –&amp;gt; Maybe b) –&amp;gt; Maybe b&lt;/p&gt;
+
+&lt;h2 id=&quot;monads&quot;&gt;Monads&lt;/h2&gt;
+
+&lt;p&gt;A monad is the minimal amount of structure needed to overload function composition in a way that “performs an extra computation” on the intermediate value.&lt;/p&gt;
+
+&lt;p&gt;对于一串方法 (say &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;g(f(x))&lt;/code&gt;)，我们希望：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;log each function call + input to a string&lt;/li&gt;
+  &lt;li&gt;pass around a token&lt;/li&gt;
+  &lt;li&gt;if f trows an exceptionm, return it instead of running g&lt;/li&gt;
+  &lt;li&gt;Assuming f and g both return lists, run g on each element of a list producted by f, and concatenate the resulting list of lists.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;f_g&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;f&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;g&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;input&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;explanation&quot;&gt;Explanation&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;function 就是 data – 所有的function都可以认为是查表&lt;/li&gt;
+  &lt;li&gt;int x = 1 &amp;lt;==&amp;gt; lambda x: 1&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;范畴---monads-和朋友们&quot;&gt;范畴 - Monads 和朋友们&lt;/h2&gt;
+
+&lt;p&gt;一个单子（Monad）说白了不过就是&lt;strong&gt;自函子范畴&lt;/strong&gt;上的一个幺半群而已。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Monad 单子&lt;/li&gt;
+  &lt;li&gt;Endo-Functor 自函子&lt;/li&gt;
+  &lt;li&gt;Monoid 幺半群 – A way of taking 2 things at the same type and creating another thing at the same time. – 减少语言与语言，接口与接口的中间转化的方法是组合（compositionality）&lt;/li&gt;
+  &lt;li&gt;Category 范畴&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;集合+运算就是群。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;范畴由三部分组成&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;一组对象&lt;/li&gt;
+  &lt;li&gt;一组态射（morphisms）– 每个态射会绑定两个对象，假如f是从源对象A到目标对象B的态射，记作：&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;f：A -&amp;gt; B&lt;/code&gt; – 这里可以直观地理解为函数&lt;/li&gt;
+  &lt;li&gt;态射组合 假如h是态射f和g的组合，记作：&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;h = g o f&lt;/code&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;&lt;strong&gt;范畴公理&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;态射操作要满足结合律，即 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;f o (g o h) = (f o g) o h&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;对任何一个范畴C，其中任何一个对象A一定存在一个单位态射，&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;id_A : A =&amp;gt; A&lt;/code&gt;. 并且对于态射 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;g: A =&amp;gt; B&lt;/code&gt; 有 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;id_B o g = g = g o id_A&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;态射在组合操作下是闭合的。即若: &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;f: A =&amp;gt; B&lt;/code&gt;, 且 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;g: B =&amp;gt; C&lt;/code&gt; 则范畴中必存在态射 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;h: A =&amp;gt; C&lt;/code&gt; 使 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;h = g o f&lt;/code&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;单位态射 态射的&lt;a href=&quot;https://zh.wikipedia.org/wiki/%E5%96%AE%E4%BD%8D%E5%85%83&quot;&gt;单位元&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;函子-functor&quot;&gt;函子 Functor&lt;/h2&gt;
+
+&lt;p&gt;函子是&lt;strong&gt;範疇間&lt;/strong&gt;的一類映射。函子也可以解釋為&lt;strong&gt;小範疇範疇&lt;/strong&gt;內的&lt;strong&gt;態射&lt;/strong&gt;。总之是吧两个范畴关联在一起，即范畴之间的转换。&lt;/p&gt;
+
+&lt;p&gt;比如对于范畴 C 和 D ，函子F : C =&amp;gt; D 能够：将 C 中任意对象a 转换为 D 中的 F(A); 将 C 中的态射f : A =&amp;gt; B 转换为 D 中的 F(f) : F(A) =&amp;gt; F(B)&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;C&lt;/code&gt;&lt;/th&gt;
+      &lt;th&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;F: C =&amp;gt; D&lt;/code&gt;&lt;/th&gt;
+      &lt;th&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;D&lt;/code&gt;&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;A&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;F(A)&lt;/code&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;f: A =&amp;gt; B&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;F(f): F(A) =&amp;gt; F(B)&lt;/code&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://cl.ly/3a5465c605e7/78847-7360d9f9f818e25e.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;单位函子&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;每一个范畴C都可以定义一个单位函子：&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Id： C =&amp;gt; C&lt;/code&gt;. 它将对象和态射直接转换成它们自己：&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Id[A] = A; f: A =&amp;gt; B, Id[f] = f&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;函子公理&lt;/strong&gt;
+&lt;strong&gt;自函子&lt;/strong&gt;
+留坑。。&lt;/p&gt;
+
+&lt;p&gt;Reference:&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://www.jianshu.com/p/31377066bf97?utm_campaign=maleskine&amp;amp;utm_content=note&amp;amp;utm_medium=seo_notes&amp;amp;utm_source=recommendation&quot;&gt;[1]&lt;/a&gt;: Scala和范畴论&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://zh.wikipedia.org/wiki/%E5%B9%BA%E5%8D%8A%E7%BE%A4&quot;&gt;[2]&lt;/a&gt;: 幺半群&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=ZhuHCtR3xq8&quot;&gt;[3]&lt;/a&gt;: youtube tut&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://www.oschina.net/news/41233/brief-incomplete-and-mostly-wrong/&quot;&gt;[4]&lt;/a&gt;: 编程语言伪简史&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://blog.leichunfeng.com/blog/2015/11/08/functor-applicative-and-monad/&quot;&gt;[5]&lt;/a&gt;: Functor、Applicative 和 Monad&lt;/p&gt;</content><author><name>Tsinglung Tseng</name></author><category term="yoyoyo" /><summary type="html">Functor</summary></entry><entry><title type="html">蛋炒饭</title><link href="http://0.0.0.0:4000/%E8%9B%8B%E7%82%92%E9%A5%AD.html" rel="alternate" type="text/html" title="蛋炒饭" /><published>2018-11-28T00:00:00-05:00</published><updated>2018-11-28T00:00:00-05:00</updated><id>http://0.0.0.0:4000/%E8%9B%8B%E7%82%92%E9%A5%AD</id><content type="html" xml:base="http://0.0.0.0:4000/%E8%9B%8B%E7%82%92%E9%A5%AD.html">&lt;p&gt;记一个好看好吃又好听的&lt;a href=&quot;https://www.youtube.com/watch?v=HC6bq-jkrJk&quot;&gt;视频&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;被煎焦的鸡蛋和刚刚凝固的鸡蛋会保持它的形态，而处于液体的鸡蛋会包裹在一部分米粒上面。这就是用最简单的方法把一个食材做出不同层次的口感。稍微翻炒一下，关火出锅。在这里所有的盐入在了葱花的上面，然后把它爆香。葱花的味道一定是偏咸的，而米饭的味道一定是偏淡的。&lt;/p&gt;
+
+&lt;p&gt;当你把它吃到嘴里的时候，由于盐的刺激，首先尝到的一定是有一点焦香味的葱花。然后随着盐味的转移和淀粉酶分解淀粉，你渐渐品尝到了米饭的香甜。从葱油的焦香到米饭的香甜，这些味道在你的舌尖上完成了过渡和传递。味觉的时间差造就了它的层次感。接下来是各种层次的鸡蛋，乱入画面。&lt;/p&gt;
+
+&lt;p&gt;随着进一步的咀嚼，一颗松子在你的唇齿间爆裂，松香、松油，铺天盖地，迅速地侵入了你的每一个味蕾。所有的这些味道在你的口中升华。就好像一个故事，每一个情结都丝丝入扣，循序渐进地把故事推向高潮。然后随着这一口蛋炒饭吞咽下肚，这个故事戛然而止。&lt;/p&gt;</content><author><name>Tsinglung Tseng</name></author><category term="yoyoyo" /><summary type="html">记一个好看好吃又好听的视频</summary></entry><entry><title type="html">Python Typing</title><link href="http://0.0.0.0:4000/python-typing.html" rel="alternate" type="text/html" title="Python Typing" /><published>2018-11-10T00:00:00-05:00</published><updated>2018-11-10T00:00:00-05:00</updated><id>http://0.0.0.0:4000/Python-typing</id><content type="html" xml:base="http://0.0.0.0:4000/python-typing.html">&lt;h1 id=&quot;python-typing&quot;&gt;python typing&lt;/h1&gt;
+
+&lt;p&gt;The most fundamental support consists of the types&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Any,&lt;/li&gt;
+  &lt;li&gt;Union,&lt;/li&gt;
+  &lt;li&gt;Tuple,&lt;/li&gt;
+  &lt;li&gt;Callable,&lt;/li&gt;
+  &lt;li&gt;TypeVar,&lt;/li&gt;
+  &lt;li&gt;Generic.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;prerequisite-knowledge-callback&quot;&gt;Prerequisite knowledge: Callback&lt;/h2&gt;
+
+&lt;div class=&quot;language-js highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;users&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;yo&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;yoyo&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;yoyoyo&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+
+&lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;addUser&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;username&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;callback&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;){&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;setTimeout&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(){&lt;/span&gt;
+        &lt;span class=&quot;nx&quot;&gt;users&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;push&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;username&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+        &lt;span class=&quot;nx&quot;&gt;callback&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;200&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;getUsers&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(){&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;setTimeout&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(){&lt;/span&gt;
+        &lt;span class=&quot;nx&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;users&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;100&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;nx&quot;&gt;adduser&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;hey&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;getUsers&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;type-alias--newtype&quot;&gt;type alias &amp;amp; NewType&lt;/h2&gt;
+
+&lt;p&gt;NewType a.k.a subtype. NewType can be defined based on another NewType.&lt;/p&gt;
+
+&lt;p&gt;Type alias declares two types to be equivalent to one another. Doing Alias = Original will make the static type checker treat Alias as being exactly equivalent to Original in all cases. This is useful when you want to simplify complex type signatures.&lt;/p&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;Vector&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;List&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;float&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;scale&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;scalar&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;float&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;vector&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Vector&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Vector&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;vector&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]))&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# output is &amp;lt;class 'int'&amp;gt;
+&lt;/span&gt;    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;scalar&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;num&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;num&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;vector&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;# 此处 Vector 的类型：
+&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;$&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Vector&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;typing&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;List&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;float&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;# typing.List 不能被实例化
+&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;$&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Vector&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;TypeError&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Type&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;List&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;cannot&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;be&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;instantiated&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;use&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;list&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;instead&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;callable&quot;&gt;Callable&lt;/h2&gt;
+
+&lt;p&gt;It is possible to declare the return type of a callable without specifying the call signature by substituting a literal ellipsis for the list of arguments in the type hint: Callable[…, ReturnType].&lt;/p&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;async_query&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;on_success&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Callable&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[[&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt; &lt;span class=&quot;bp&quot;&gt;None&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;
+                &lt;span class=&quot;n&quot;&gt;on_error&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Callable&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[[&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;Exception&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt; &lt;span class=&quot;bp&quot;&gt;None&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&quot;bp&quot;&gt;None&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;# Body
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;generic&quot;&gt;Generic&lt;/h2&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;typing&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;TypeVar&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Iterable&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Tuple&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Union&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;S&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;TypeVar&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'S'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;Response&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Union&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Iterable&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;S&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;# Return type here is same as Union[Iterable[str], int]
+&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;response&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;query&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;str&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Response&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;str&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]:&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;...&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;T&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;TypeVar&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'T'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;float&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;complex&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;Vec&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Iterable&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Tuple&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;T&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;T&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]]&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;inproduct&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;v&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Vec&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;T&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;T&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# Same as Iterable[Tuple[T, T]]
+&lt;/span&gt;    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;sum&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;y&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;y&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;v&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name>Tsinglung Tseng</name></author><category term="yoyoyo" /><summary type="html">python typing</summary></entry><entry><title type="html">《如何阅读一本书》读书笔记</title><link href="http://0.0.0.0:4000/%E5%A6%82%E4%BD%95%E9%98%85%E8%AF%BB%E4%B8%80%E6%9C%AC%E4%B9%A6-%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0.html" rel="alternate" type="text/html" title="《如何阅读一本书》读书笔记" /><published>2018-04-22T00:00:00-04:00</published><updated>2018-04-22T00:00:00-04:00</updated><id>http://0.0.0.0:4000/%E3%80%8A%E5%A6%82%E4%BD%95%E9%98%85%E8%AF%BB%E4%B8%80%E6%9C%AC%E4%B9%A6%E3%80%8B%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0</id><content type="html" xml:base="http://0.0.0.0:4000/%E5%A6%82%E4%BD%95%E9%98%85%E8%AF%BB%E4%B8%80%E6%9C%AC%E4%B9%A6-%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0.html">&lt;h1 id=&quot;阅读的层次&quot;&gt;阅读的层次&lt;/h1&gt;
+
+&lt;h2 id=&quot;阅读的活力与艺术&quot;&gt;阅读的活力与艺术&lt;/h2&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;主动的阅读
+阅读的目标：为获得咨询而读，以及为求得理解而读；阅读就是学习：指导型学习、自我发现型学习，不同的是老师的出席与缺席&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;太多的资讯与太少的资讯一样，都是对理解力的阻碍。现代媒体正以压倒性的咨询泛滥阻碍着我们地理解力——因为媒体提供的信息，经过了太精心的包装，使得思想形同没有必要了。&lt;/p&gt;
+
+&lt;p&gt;因此，阅读越主动，效果越好。&lt;strong&gt;捕手的艺术&lt;/strong&gt;就在能够接住任何球的技巧。作者不会故意投出让人接不到的球。&lt;/p&gt;
+
+&lt;p&gt;知指导型学习是“辅助型的自我发现学习”。&lt;/p&gt;
+
+&lt;h2 id=&quot;阅读的层次-1&quot;&gt;阅读的层次&lt;/h2&gt;
+
+&lt;p&gt;阅读的层次之间相互渐进互相包含。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;基础阅读&lt;/li&gt;
+  &lt;li&gt;检视阅读-系统化略读&lt;/li&gt;
+  &lt;li&gt;分析阅读-追寻理解&lt;/li&gt;
+  &lt;li&gt;主题阅读&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;基础阅读&quot;&gt;基础阅读&lt;/h3&gt;
+
+&lt;p&gt;方法的转变：ABC 到 phonic method.&lt;/p&gt;
+
+&lt;p&gt;学习阅读的阶段。建立字汇-context&lt;/p&gt;
+
+&lt;p&gt;开始挑几个看来跟主题息息相关的篇章来看。&lt;/p&gt;
+
+&lt;p&gt;快不该快到有损满足与理解，慢不该慢到不值得。&lt;/p&gt;
+
+&lt;h3 id=&quot;检视阅读&quot;&gt;检视阅读&lt;/h3&gt;
+
+&lt;h2 id=&quot;如何做一个自我要求的读者&quot;&gt;如何做一个自我要求的读者&lt;/h2&gt;
+
+&lt;p&gt;一个读者的责任：&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;这本书在谈什么？&lt;/li&gt;
+  &lt;li&gt;作者细部说了什么，怎么说的？&lt;/li&gt;
+  &lt;li&gt;有没有道理？全部 or 部分？&lt;/li&gt;
+  &lt;li&gt;跟你有什么关系？&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;笔记：&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;结构笔记&lt;/li&gt;
+  &lt;li&gt;概念笔记&lt;/li&gt;
+  &lt;li&gt;辩证笔记&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;培养阅读的习惯——滑雪的技巧重点在不应该把所有的动作分开想。而是要连贯在一起，平滑而稳定地进行。&lt;/p&gt;
+
+&lt;p&gt;规则的多样化，意味着要养成一个习惯的复杂度，而非要形成许多习惯。&lt;/p&gt;
+
+&lt;h1 id=&quot;分析阅读&quot;&gt;分析阅读&lt;/h1&gt;
+
+&lt;h2 id=&quot;一本书的分类&quot;&gt;一本书的分类&lt;/h2&gt;
+
+&lt;p&gt;要知道书籍的分类。我们要知道的不只是哪一类的书带给我们指导，还要知道是用什么方法指导。&lt;/p&gt;
+
+&lt;p&gt;《纯粹理性批判》—— 我们何以知，什么是我们能知与不能知。
+《实践理性批判》—— 如何自我管理。&lt;/p&gt;
+
+&lt;p&gt;理论性的书 和 实用性的书。&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;理论性——知识的确实性或有效性——“应当”、“应该”、“好坏”、“结果、意义”&lt;/li&gt;
+  &lt;li&gt;实用性——“是”、“否”&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;透视一本书&quot;&gt;透视一本书&lt;/h2&gt;
+
+&lt;p&gt;一句话概括一本书。&lt;/p&gt;
+
+&lt;p&gt;抽出重要的篇章，说明它们如何构成一个整体的框架。&lt;/p&gt;
+
+&lt;p&gt;可读性高的作品是作者达到了建筑学上最完整的整体架构。最好的书都有最睿智的架构。&lt;/p&gt;
+
+&lt;p&gt;一个熟悉的公式：男孩遇到女孩，男孩失掉女孩，男孩又得到女孩。&lt;/p&gt;
+
+&lt;p&gt;希罗多德《历史》—— 这本书是希罗多德所做的研究。他出版这本书是希望提醒人们，前人所做的事情，以免希腊人与异邦人伟大的事迹失去了应得的光荣，此外还记录下他们在这些夙怨中的领土状态。&lt;/p&gt;
+
+&lt;p&gt;亚里士多德《伦理学》——这本书是在探索人类快乐的本质，分析在何种状态下，人类会获得或失去快乐，并说明在行为与思想上该如何去做，才能变得快乐避免不幸。虽然其他美好的事物也被认可为幸福快乐的必要条件，像是财富、健康、友谊与生活在公正的社会中，但原则上还是强调以培养到的与心智上的善行为主。&lt;/p&gt;
+
+&lt;h2 id=&quot;与作者找出共同的词义&quot;&gt;与作者找出共同的词义&lt;/h2&gt;
+
+&lt;h2 id=&quot;判断作者的主旨&quot;&gt;判断作者的主旨&lt;/h2&gt;
+
+&lt;h2 id=&quot;公正地评断一本书&quot;&gt;公正地评断一本书&lt;/h2&gt;
+
+&lt;h2 id=&quot;赞同-or-反对作者&quot;&gt;赞同 or 反对作者&lt;/h2&gt;
+
+&lt;h2 id=&quot;辅助阅读&quot;&gt;辅助阅读&lt;/h2&gt;
+
+&lt;h1 id=&quot;阅读不同读物的方法&quot;&gt;阅读不同读物的方法&lt;/h1&gt;
+
+&lt;h2 id=&quot;如何阅读实用型的书&quot;&gt;如何阅读实用型的书&lt;/h2&gt;
+
+&lt;h2 id=&quot;如何阅读想象文学&quot;&gt;如何阅读想象文学&lt;/h2&gt;
+
+&lt;h2 id=&quot;阅读故事戏剧与诗的一些建议&quot;&gt;阅读故事、戏剧与诗的一些建议&lt;/h2&gt;
+
+&lt;h2 id=&quot;如何阅读历史书&quot;&gt;如何阅读历史书&lt;/h2&gt;
+
+&lt;h2 id=&quot;如何阅读科学与数学&quot;&gt;如何阅读科学与数学&lt;/h2&gt;
+
+&lt;h2 id=&quot;如何阅读哲学书&quot;&gt;如何阅读哲学书&lt;/h2&gt;
+
+&lt;h2 id=&quot;如何阅读社会科学书&quot;&gt;如何阅读社会科学书&lt;/h2&gt;
+
+&lt;h1 id=&quot;阅读的最终目标&quot;&gt;阅读的最终目标&lt;/h1&gt;
+
+&lt;h2 id=&quot;阅读的第四个层次主题阅读&quot;&gt;阅读的第四个层次：主题阅读&lt;/h2&gt;
+
+&lt;h2 id=&quot;阅读与心智的成长&quot;&gt;阅读与心智的成长&lt;/h2&gt;</content><author><name>Tsinglung Tseng</name></author><category term="yoyoyo" /><summary type="html">阅读的层次</summary></entry></feed>

@@ -1,11 +1,8 @@
 ---
-layout: article
-titles:
-  en: About
-  zh: 关于
-  zh-Hans: 关于
-  zh-Hant: 關於
-key: page-about
+layout: page
+title: About
 ---
 
-A personal blog.
+This is an example page!
+
+It's very similar to a `post` layout, with the only difference that the publish date is not shown!

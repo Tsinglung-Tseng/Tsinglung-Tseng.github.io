@@ -1,9 +1,7 @@
 ---
-title: Python Typing
-key: 20181110
-tags: Python
----
-
+layout: post
+category: yoyoyo
+---
 
 # python typing
 

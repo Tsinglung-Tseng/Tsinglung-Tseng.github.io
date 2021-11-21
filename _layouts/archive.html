@@ -1,21 +1,9 @@
 ---
-layout: page
-titles:
-  en: Archive
-  zh: 归档
-  zh-Hans: 归档
-  zh-Hant: 歸檔
+layout: default
 ---
 
-<div class="layout--archive js-all">
-  {%- include tags.html -%}
-  <div class="js-result layout--archive__result d-none">
-    {%- include article-list.html articles=site.posts type='brief' show_info=true reverse=true group_by='year' -%}
-  </div>
-</div>
+{%-include back_link.html-%}
 
-<script>
-  {%- include scripts/archieve.js -%}
-</script>
+<h1>{{ page.title }}</h1>
 
-{{ content }}
+{%-include post_list.html category=page.which_category-%}

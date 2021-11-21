@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <title>Monad</title><!-- Begin Jekyll SEO tag v2.7.1 -->
+<meta name="generator" content="Jekyll v3.9.1" />
+<meta property="og:title" content="Monad" />
+<meta name="author" content="Tsinglung Tseng" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Functor" />
+<meta property="og:description" content="Functor" />
+<link rel="canonical" href="http://0.0.0.0:4000/monad.html" />
+<meta property="og:url" content="http://0.0.0.0:4000/monad.html" />
+<meta property="og:site_name" content="Tsinglung Tseng" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2019-03-18T00:00:00-04:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Monad" />
+<script type="application/ld+json">
+{"mainEntityOfPage":{"@type":"WebPage","@id":"http://0.0.0.0:4000/monad.html"},"author":{"@type":"Person","name":"Tsinglung Tseng"},"@type":"BlogPosting","url":"http://0.0.0.0:4000/monad.html","headline":"Monad","dateModified":"2019-03-18T00:00:00-04:00","datePublished":"2019-03-18T00:00:00-04:00","description":"Functor","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link type="application/atom+xml" rel="alternate" href="http://0.0.0.0:4000/feed.xml" title="Tsinglung Tseng" /><link rel="shortcut icon" type="image/x-icon" href="/mylogo.png" />
+  <link rel="stylesheet" href="/assets/css/main.css" />
+</head><body a="light">
+    <main class="page-content" aria-label="Content">
+      <div class="w">
+        <a href="/">..</a><article>
+  <p class="post-meta">
+    <time datetime="2019-03-18 00:00:00 -0400">2019-03-18</time>
+  </p>
+  
+  <h1>Monad</h1>
+
+  <h2 id="functor">Functor</h2>
+
+<p>Any type that has a map function is a functor. 使用functor的好处是数据的容器被抽象掉了。比如在流中，我们无需考虑如何处理异步数据。</p>
+
+<p>另外我们可以chain map calls, 因为 map function 会返回其它新的 functor。</p>
+
+<h3 id="a-haskell-example">A Haskell example</h3>
+
+<p>A monad is some kind of type constructor, like maybe, or List …</p>
+
+<p>The maybe monad :
+    return :: a –&gt; Maybe a
+    »=    :: Maybe a –&gt; (a –&gt; Maybe b) –&gt; Maybe b</p>
+
+<h2 id="monads">Monads</h2>
+
+<p>A monad is the minimal amount of structure needed to overload function composition in a way that “performs an extra computation” on the intermediate value.</p>
+
+<p>对于一串方法 (say <code class="language-plaintext highlighter-rouge">g(f(x))</code>)，我们希望：</p>
+
+<ul>
+  <li>log each function call + input to a string</li>
+  <li>pass around a token</li>
+  <li>if f trows an exceptionm, return it instead of running g</li>
+  <li>Assuming f and g both return lists, run g on each element of a list producted by f, and concatenate the resulting list of lists.</li>
+</ul>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">f_g</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">f</span> <span class="o">&gt;=&gt;</span> <span class="n">g</span><span class="p">)(</span><span class="nb">input</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h2 id="explanation">Explanation</h2>
+
+<ul>
+  <li>function 就是 data – 所有的function都可以认为是查表</li>
+  <li>int x = 1 &lt;==&gt; lambda x: 1</li>
+</ul>
+
+<h2 id="范畴---monads-和朋友们">范畴 - Monads 和朋友们</h2>
+
+<p>一个单子（Monad）说白了不过就是<strong>自函子范畴</strong>上的一个幺半群而已。</p>
+
+<ul>
+  <li>Monad 单子</li>
+  <li>Endo-Functor 自函子</li>
+  <li>Monoid 幺半群 – A way of taking 2 things at the same type and creating another thing at the same time. – 减少语言与语言，接口与接口的中间转化的方法是组合（compositionality）</li>
+  <li>Category 范畴</li>
+</ul>
+
+<p>集合+运算就是群。</p>
+
+<p><strong>范畴由三部分组成</strong></p>
+
+<ol>
+  <li>一组对象</li>
+  <li>一组态射（morphisms）– 每个态射会绑定两个对象，假如f是从源对象A到目标对象B的态射，记作：<code class="language-plaintext highlighter-rouge">f：A -&gt; B</code> – 这里可以直观地理解为函数</li>
+  <li>态射组合 假如h是态射f和g的组合，记作：<code class="language-plaintext highlighter-rouge">h = g o f</code></li>
+</ol>
+
+<p><strong>范畴公理</strong></p>
+
+<ol>
+  <li>态射操作要满足结合律，即 <code class="language-plaintext highlighter-rouge">f o (g o h) = (f o g) o h</code></li>
+  <li>对任何一个范畴C，其中任何一个对象A一定存在一个单位态射，<code class="language-plaintext highlighter-rouge">id_A : A =&gt; A</code>. 并且对于态射 <code class="language-plaintext highlighter-rouge">g: A =&gt; B</code> 有 <code class="language-plaintext highlighter-rouge">id_B o g = g = g o id_A</code></li>
+  <li>态射在组合操作下是闭合的。即若: <code class="language-plaintext highlighter-rouge">f: A =&gt; B</code>, 且 <code class="language-plaintext highlighter-rouge">g: B =&gt; C</code> 则范畴中必存在态射 <code class="language-plaintext highlighter-rouge">h: A =&gt; C</code> 使 <code class="language-plaintext highlighter-rouge">h = g o f</code></li>
+</ol>
+
+<p>单位态射 态射的<a href="https://zh.wikipedia.org/wiki/%E5%96%AE%E4%BD%8D%E5%85%83">单位元</a></p>
+
+<h2 id="函子-functor">函子 Functor</h2>
+
+<p>函子是<strong>範疇間</strong>的一類映射。函子也可以解釋為<strong>小範疇範疇</strong>內的<strong>態射</strong>。总之是吧两个范畴关联在一起，即范畴之间的转换。</p>
+
+<p>比如对于范畴 C 和 D ，函子F : C =&gt; D 能够：将 C 中任意对象a 转换为 D 中的 F(A); 将 C 中的态射f : A =&gt; B 转换为 D 中的 F(f) : F(A) =&gt; F(B)</p>
+
+<table>
+  <thead>
+    <tr>
+      <th><code class="language-plaintext highlighter-rouge">C</code></th>
+      <th><code class="language-plaintext highlighter-rouge">F: C =&gt; D</code></th>
+      <th><code class="language-plaintext highlighter-rouge">D</code></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">A</code></td>
+      <td> </td>
+      <td><code class="language-plaintext highlighter-rouge">F(A)</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">f: A =&gt; B</code></td>
+      <td> </td>
+      <td><code class="language-plaintext highlighter-rouge">F(f): F(A) =&gt; F(B)</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<p><img src="https://cl.ly/3a5465c605e7/78847-7360d9f9f818e25e.png" alt="" /></p>
+
+<p><strong>单位函子</strong></p>
+
+<p>每一个范畴C都可以定义一个单位函子：<code class="language-plaintext highlighter-rouge">Id： C =&gt; C</code>. 它将对象和态射直接转换成它们自己：<code class="language-plaintext highlighter-rouge">Id[A] = A; f: A =&gt; B, Id[f] = f</code></p>
+
+<p><strong>函子公理</strong>
+<strong>自函子</strong>
+留坑。。</p>
+
+<p>Reference:</p>
+
+<p><a href="https://www.jianshu.com/p/31377066bf97?utm_campaign=maleskine&amp;utm_content=note&amp;utm_medium=seo_notes&amp;utm_source=recommendation">[1]</a>: Scala和范畴论</p>
+
+<p><a href="https://zh.wikipedia.org/wiki/%E5%B9%BA%E5%8D%8A%E7%BE%A4">[2]</a>: 幺半群</p>
+
+<p><a href="https://www.youtube.com/watch?v=ZhuHCtR3xq8">[3]</a>: youtube tut</p>
+
+<p><a href="https://www.oschina.net/news/41233/brief-incomplete-and-mostly-wrong/">[4]</a>: 编程语言伪简史</p>
+
+<p><a href="http://blog.leichunfeng.com/blog/2015/11/08/functor-applicative-and-monad/">[5]</a>: Functor、Applicative 和 Monad</p>
+
+</article>
+      </div>
+    </main>
+  </body>
+</html>
