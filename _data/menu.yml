@@ -6,6 +6,9 @@ entries:
     entries:
       - title: github
         url: https://github.com/Tsinglung-Tseng
+      - title: about
+        url: about
+      
 
   - title: thoughts
     post_list:
