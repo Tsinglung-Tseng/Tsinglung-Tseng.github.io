@@ -2,23 +2,13 @@
 # https://github.com/riggraz/no-style-please#customize-the-menu
 
 entries:
-  - title: another list
-  entries:
-    - title: with subitems
-      entries:
-        - title: with subsubitems
-        - title: example page
-          url: about
   - title: me
     entries:
       - title: github
         url: https://github.com/Tsinglung-Tseng
       - title: about
         url: about
-
-
-      
-
+        
   - title: thoughts
     post_list:
       limit: 10
